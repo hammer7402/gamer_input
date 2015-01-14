@@ -1,0 +1,13 @@
+<p><%= @topic["title"] %></p>
+<p><%= @topic["topic"] %></p>
+
+<form method="post" action="/categories/<%= @categories %>/comments?id=<%= @id %>">
+
+  <label>Enter A Comment:
+    <textarea rows="4" cols="50" name="comment">
+    </textarea>
+  </label>
+
+  <input type="submit" value="Add Comment">
+
+</form>

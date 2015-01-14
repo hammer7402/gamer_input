@@ -1,0 +1,5 @@
+<% @titles.each do |title| %>
+  <a href="/categories/<%= @categories %>/comments?id=<%= title.split('*):(*')[1] %>"><%= title.split('*):(*')[0] %></a>
+<% end %>
+
+<a href="/categories/<%= @categories %>/new">Create a new topic</a>
