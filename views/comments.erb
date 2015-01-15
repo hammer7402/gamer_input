@@ -1,5 +1,17 @@
 <p><%= @topic["title"] %></p>
 <p><%= @topic["topic"] %></p>
+<div>
+  <a href="/categories/<%= @categories %>/comments?tlike=true&id=<%= @id %>" alt="add a like">Like <%= @tlike %>!</a>
+  <a href="/categories/<%= @categories %>/comments?tdislike=true&id=<%= @id %>" alt="add a dislike">Dislike <%= @dislike %>!</a>
+</div>
+
+<% @comments.each_with_index do |comment, index| %>
+  <p><%= comment["comment"] %></p>
+  <div>
+    <a href="/categories/<%= @categories %>/comments?clike=true&id=<%= @id %>&index=<%= index %>" alt="add a like">Like <%= comment["like"] %>!</a>
+    <a href="/categories/<%= @categories %>/comments?cdislike=true&id=<%= @id %>&index=<%= index %>" alt="add a dislike">Dislike <%= comment["dislike"] %>!</a>
+  </div>
+<% end %>
 
 <form method="post" action="/categories/<%= @categories %>/comments?id=<%= @id %>">
 
@@ -7,6 +19,9 @@
     <textarea rows="4" cols="50" name="comment">
     </textarea>
   </label>
+
+  <input type="hidden" name="like" value="0">
+  <input type="hidden" name="dislike" value="0">
 
   <input type="submit" value="Add Comment">
 
