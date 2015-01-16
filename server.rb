@@ -2,7 +2,7 @@
 module GamerInput
   class Server < Sinatra::Base
 
-    enable :logging
+    enable :logging, :sessions
 
     configure :development do
       require 'pry'
@@ -11,11 +11,42 @@ module GamerInput
     end
 
     get('/') do
+      # binding.pry
+      @wrong = params["wrong"]
+      render(:erb, :home, { :layout => :default_layout })
+    end
+
+    get('/anonymous') do
+      session[:user] =  "Anonymous"
+      session[:thumbnail] = "http://cache.desktopnexus.com/thumbnails/1215426-bigthumbnail.jpg"
       redirect('/categories')
     end
 
     get('/categories') do
+      # binding.pry
       render(:erb, :index, { :layout => :default_layout })
+    end
+
+    get('/login') do
+      # binding.pry
+      user = params['user'].downcase
+      password1 = params['password']
+      # binding.pry
+      password2 = $redis.hget(user, "password")
+      if password1 == password2
+        # binding.pry
+        session[:user] =  $redis.hget(user, "name")
+        session[:thumbnail] = $redis.hget(user, "thumbnail")
+        # binding.pry
+        redirect('/categories')
+      else
+        redirect('/?wrong=true')
+      end
+    end
+
+    get('/logout') do
+      session.clear
+      redirect('/')
     end
 
     get('/categories/:topics') do
@@ -38,11 +69,14 @@ module GamerInput
       @comment = params["topic"]
       like = params["like"]
       dislike = params["dislike"]
+      user = session[:user]
+      thumbnail = session[:thumbnail]
+      time = Time.now
 
       # binding.pry
       id=$redis.incr("#{@categories}:id")
       topic = topic_string(@categories, id)
-      $redis.hmset("#{topic}", "title", @title, "topic", @comment)
+      $redis.hmset("#{topic}", "title", @title, "topic", @comment, "user", user, "thumbnail", thumbnail, "time", time)
       # $redis.hmset("#{@categories}:#{id}", "title", @title, "topic", @comment)
       $redis.lpush("#{@categories}:ids", id)
 
@@ -51,6 +85,29 @@ module GamerInput
       $redis.set("#{topic}:dislike", dislike)
       # $redis.set("#{@categories}:#{id}:dislike", dislike)
       redirect("/categories/#{@categories}")
+    end
+
+    get('/users/new') do
+      @name = params['name']
+      render(:erb, :new_user, { :layout => :default_layout })
+    end
+
+    post('/users/new') do
+      user = params['user']
+      password = params['password']
+      thumbnail = params['thumbnail']
+
+      if thumbnail == ""
+        thumbnail = "http://cache.desktopnexus.com/thumbnails/1215426-bigthumbnail.jpg"
+      end
+
+      # binding.pry
+      if $redis.hgetall(user.downcase) == {}
+        $redis.hmset(user.downcase, "name", user, "password", password, "thumbnail", thumbnail)
+        redirect('/')
+      else
+        redirect('/users/new?name=true')
+      end
     end
 
     get('/categories/:topics/new') do
@@ -130,12 +187,15 @@ module GamerInput
       @comment = params["comment"]
       like = params["like"]
       dislike = params["dislike"]
+      user = session[:user]
+      thumbnail = session[:thumbnail]
+      time = Time.now
 
       comment = comment_string(@categories, @id)
       id=$redis.incr("#{comment}:id")
       # id=$redis.incr("#{@categories}:topic:#{@id}:comment:id")
       set_comment = comment_l_and_d(@categories, @id, id)
-      $redis.hmset(set_comment, "comment", @comment, "like", like, "dislike", dislike)
+      $redis.hmset(set_comment, "comment", @comment, "like", like, "dislike", dislike, "user", user, "thumbnail", thumbnail, "time", time)
       # $redis.hmset("#{@categories}:topic:#{@id}:comment:#{id}", "comment", @comment, "like", like, "dislike", dislike)
       $redis.lpush("#{comment}:ids", id)
       # $redis.lpush("#{@categories}:topic:#{@id}:comment:ids", id)
@@ -159,6 +219,26 @@ module GamerInput
     def dislikes_for_comment(category,topic_id,comment_index)
       comment = comment_l_and_d(category,topic_id,comment_index)
       $redis.hget("#{comment}", "dislike").to_i
+    end
+
+    def time_difference(time)
+      time = Time.strptime(time, "%Y-%m-%d %H:%M:%S")
+      if (Time.now - time) >= 60
+        if (Time.now - time) >= 3600
+          if (Time.now - time) >= 86400
+            day = Time.now.day - time.day
+            "#{day} days ago"
+          else
+            hour = Time.now.hour - time.hour
+            "#{hour} hours ago"
+          end
+        else
+          min = Time.now.min - time.min
+          "#{min} minutes ago"
+        end
+      else
+        "less then a minute ago"
+      end
     end
 
   end

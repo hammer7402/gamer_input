@@ -1,0 +1,28 @@
+<div>
+  <form method="get" action="/login">
+
+    <label>Enter Your User Name:
+      <input type="text" name="user">
+    </label>
+
+    <% if @wrong == "true" %>
+      <p>Entered in the wrong password:</p>
+    <% end %>
+    <label>
+      <input type="password" name="password">
+    </label>
+
+    <input type="submit" value="Login">
+
+  </form>
+</div>
+
+<div>
+  <a href="/users/new">Create Account</a>
+</div>
+
+<div>
+  <a href="/anonymous">Continue Without Loging In</a>
+</div>
+
+

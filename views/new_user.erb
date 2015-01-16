@@ -1,0 +1,20 @@
+
+<form method="post" action="/users/new">
+  <% if @name == "true" %>
+    <p>User Name Already Exists</p>
+  <% end %>
+  <label>Enter a user name:
+    <input type="text" name="user" required>
+  </label>
+
+  <label>Enter a password:
+    <input type="password" name="password" required>
+  </label>
+
+  <label>Enter a thumbnail image:
+    <input type="text" name="thumbnail">
+  </label>
+
+  <input type="submit" value="Create">
+
+</form>

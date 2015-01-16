@@ -1,0 +1,35 @@
+body {
+}
+
+div {
+}
+
+.main {
+  background-color: red;
+  width: 960px;
+  margin: 0 auto;
+}
+
+.row {
+  padding: 10px 0;
+}
+
+.cat-wrapper {
+  display: inline-block;
+  vertical-align: top;
+  text-align: center;
+  overflow: hidden;
+  width: 200px;
+  height: 150px;
+}
+
+.action-back {
+  background-image: url(http://assets.vg247.com/current//2014/06/street_fighter.jpg);
+  /*transform: scale(-2, -4);*/
+
+}
+
+/*.cat-wrapper img {
+}*/
+
+.

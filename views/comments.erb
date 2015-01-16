@@ -1,3 +1,7 @@
+<div>
+  <img src="<%= @topic["thumbnail"] %>" alt="user's thumbnail">
+  <p class="t_top"><%= @topic["user"] %></p>
+</div>
 <p><%= @topic["title"] %></p>
 <p><%= @topic["topic"] %></p>
 <div>
@@ -6,6 +10,10 @@
 </div>
 
 <% @comments.each_with_index do |comment, index| %>
+  <div>
+    <img src="<%= comment["thumbnail"] %>" alt="user's thumbnail">
+    <p class="t_top"><%= comment["user"] %></p>
+  </div>
   <p><%= comment["comment"] %></p>
   <div>
     <a href="/categories/<%= @categories %>/comments?clike=true&id=<%= @id %>&index=<%= index %>" alt="add a like">Like <%= comment["like"] %>!</a>
