@@ -3,11 +3,22 @@
 <head>
   <meta charset="UTF-8">
   <title>Gamer Input</title>
-  <link rel="stylesheet" type="text/css" href="/stylesheets/style.css">
+    <link rel="stylesheet" type="text/css" href="/stylesheets/style.css">
 </head>
 <body>
-  <div>
-    <a href="/logout">logout</a>
+  <div class="top-color">
+    <!-- <div>
+      <a class="white top-list" href="/categories/Action">Action</a>
+      <a class="white top-list" href="/categories/Action-Adventure">Action Adventure</a>
+    </div> -->
+    <div class="login">
+      <% if @logout == nil || @logout == "Anonymous" %>
+        <a class="white" href="/logout">login</a>
+      <% end %>
+      <% if @logout != nil %>
+        <a class="white" href="/logout">logout</a>
+      <% end %>
+    </div>
   </div>
   <div class="wrapper">
     <%= yield %>

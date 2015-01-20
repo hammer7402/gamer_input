@@ -1,30 +1,44 @@
-<div>
-  <img src="<%= @topic["thumbnail"] %>" alt="user's thumbnail">
-  <p class="t_top"><%= @topic["user"] %></p>
-</div>
-<p><%= @topic["title"] %></p>
-<p><%= @topic["topic"] %></p>
-<div>
-  <a href="/categories/<%= @categories %>/comments?tlike=true&id=<%= @id %>" alt="add a like">Like <%= @tlike %>!</a>
-  <a href="/categories/<%= @categories %>/comments?tdislike=true&id=<%= @id %>" alt="add a dislike">Dislike <%= @dislike %>!</a>
+<div class="t-wrapper">
+  <div class="block">
+    <div class="left">
+      <img class="resize" src="<%= @topic["thumbnail"] %>" alt="user's thumbnail">
+    </div>
+    <div class="right">
+      <p class="t_top"><%= @topic["user"] %></p>
+      <p class="t_top top-right"><%= @t_time %></p>
+      <p><%= @topic["title"] %></p>
+      <p><%= @topic["topic"] %></p>
+      <div>
+        <a href="/categories/<%= @categories %>/comments?tlike=true&id=<%= @id %>" alt="add a like">Like <%= @tlike %>!</a>
+        <a href="/categories/<%= @categories %>/comments?tdislike=true&id=<%= @id %>" alt="add a dislike">Dislike <%= @dislike %>!</a>
+      </div>
+    </div>
+  </div>
 </div>
 
 <% @comments.each_with_index do |comment, index| %>
-  <div>
-    <img src="<%= comment["thumbnail"] %>" alt="user's thumbnail">
-    <p class="t_top"><%= comment["user"] %></p>
-  </div>
-  <p><%= comment["comment"] %></p>
-  <div>
-    <a href="/categories/<%= @categories %>/comments?clike=true&id=<%= @id %>&index=<%= index %>" alt="add a like">Like <%= comment["like"] %>!</a>
-    <a href="/categories/<%= @categories %>/comments?cdislike=true&id=<%= @id %>&index=<%= index %>" alt="add a dislike">Dislike <%= comment["dislike"] %>!</a>
+  <div class="c-wrapper">
+    <div class="left">
+      <img class="resize" src="<%= comment["thumbnail"] %>" alt="user's thumbnail">
+    </div>
+    <div class="right">
+      <div>
+        <p class="t_top"><%= comment["user"] %></p>
+        <p class="t_top top-right"><%= comment["c_time"] %></p>
+      </div>
+      <p><%= comment["comment"] %></p>
+      <div>
+        <a href="/categories/<%= @categories %>/comments?clike=true&id=<%= @id %>&index=<%= index %>" alt="add a like">Like <%= comment["like"] %>!</a>
+        <a href="/categories/<%= @categories %>/comments?cdislike=true&id=<%= @id %>&index=<%= index %>" alt="add a dislike">Dislike <%= comment["dislike"] %>!</a>
+      </div>
+    </div>
   </div>
 <% end %>
 
 <form method="post" action="/categories/<%= @categories %>/comments?id=<%= @id %>">
 
   <label>Enter A Comment:
-    <textarea rows="4" cols="50" name="comment">
+    <textarea class="block" rows="4" cols="50" name="comment">
     </textarea>
   </label>
 

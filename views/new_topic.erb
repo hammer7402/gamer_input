@@ -1,14 +1,18 @@
 
 <form method="post" action="/categories/<%= @categories %>">
 
-  <label>Enter Your Title
-    <input type="text" name="title">
-  </label>
+  <div class="block">
+    <label>Enter Your Title:
+      <input class="block" type="text" name="title">
+    </label>
+  </div>
 
-  <label>Enter Your Comment
-    <textarea rows="4" cols="50" name="topic">
-    </textarea>
-  </label>
+  <div class="block">
+    <label>Enter Your Comment:
+      <textarea class="block" rows="4" cols="50" name="topic">
+      </textarea>
+    </label>
+  </div>
 
   <input type="hidden" name="like" value="0">
   <input type="hidden" name="dislike" value="0">

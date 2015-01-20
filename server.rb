@@ -10,7 +10,12 @@ module GamerInput
       $redis = Redis.new # defaults to 127.0.0.1:6379
     end
 
+    configure :production do
+      $redis = Redis.new({url: ENV['REDISTOGO_URL']})
+    end
+
     get('/') do
+      @logout = session[:user]
       # binding.pry
       @wrong = params["wrong"]
       render(:erb, :home, { :layout => :default_layout })
@@ -24,6 +29,7 @@ module GamerInput
 
     get('/categories') do
       # binding.pry
+      @logout = session[:user]
       render(:erb, :index, { :layout => :default_layout })
     end
 
@@ -51,13 +57,17 @@ module GamerInput
 
     get('/categories/:topics') do
       @categories = params[:topics]
+      @logout = session[:user]
       # binding.pry
       ids = $redis.lrange("#{@categories}:ids", 0, -1)
       @titles = ids.map do |id|
         topic = topic_string(@categories, id)
-        title = $redis.hget("#{topic}", "title")
+        title = $redis.hget(topic, "title")
         # title = $redis.hget("#{@categories}:#{id}", "title")
-        title = "#{title}*):(*#{id}"
+        time = $redis.hget(topic, "time")
+        time_ago = time_difference(time)
+        title = "#{title}*):(*#{id}*):(*#{time_ago}"
+        # binding.pry
       end
       # binding.pry
       render(:erb, :topics, { :layout => :default_layout })
@@ -89,6 +99,7 @@ module GamerInput
 
     get('/users/new') do
       @name = params['name']
+      @logout = session[:user]
       render(:erb, :new_user, { :layout => :default_layout })
     end
 
@@ -112,12 +123,14 @@ module GamerInput
 
     get('/categories/:topics/new') do
       @categories = params[:topics]
+      @logout = session[:user]
       render(:erb, :new_topic, { :layout => :default_layout })
     end
 
     get('/categories/:topics/comments') do
       @categories = params[:topics]
       @id = params["id"]
+      @logout = session[:user]
       tlike = params["tlike"]
       tdislike = params["tdislike"]
       clike = params["clike"]
@@ -169,9 +182,19 @@ module GamerInput
       @dislike = $redis.get("#{topic}:dislike")
       # @dislike = $redis.get("#{@categories}:#{@id}:dislike")
       @topic = $redis.hgetall(topic)
+      @t_time = time_difference(@topic["time"])
+      # binding.pry
       # @topic = $redis.hgetall("#{@categories}:#{@id}")
       @num_comments = $redis.lrange("#{comment}:ids", 0, -1)
       # @num_comments = $redis.lrange("#{@categories}:topic:#{@id}:comment:ids", 0, -1)
+      # binding.pry
+      @num_comments.each do |num|
+        time = $redis.hget("#{comment}:#{num}", "time")
+        c_time = time_difference(time)
+        # binding.pry
+        $redis.hset("#{comment}:#{num}", "c_time", c_time)
+      end
+
       @comments = @num_comments.map do |num|
         $redis.hgetall("#{comment}:#{num}")
         # $redis.hgetall("#{@categories}:topic:#{@id}:comment:#{num}")
@@ -226,14 +249,27 @@ module GamerInput
       if (Time.now - time) >= 60
         if (Time.now - time) >= 3600
           if (Time.now - time) >= 86400
+            if (Time.now - time) >= 2592000
+              "over a month ago"
+            end
             day = Time.now.day - time.day
+            if day < 0
+              day = day + 30
+            end
             "#{day} days ago"
           else
             hour = Time.now.hour - time.hour
+            if hour < 0
+              hour = hour + 24
+            end
             "#{hour} hours ago"
           end
         else
           min = Time.now.min - time.min
+          # binding.pry
+          if min < 0
+            min = min + 60
+          end
           "#{min} minutes ago"
         end
       else

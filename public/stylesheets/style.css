@@ -10,23 +10,105 @@ div {
   margin: 0 auto;
 }
 
+.top-color {
+  background-color: blue;
+  height: 20px;
+}
+
+a {
+  text-decoration: none;
+}
+
+.line {
+  display: inline-block;
+}
+
+.topic {
+  text-decoration: underline;
+  color: black;
+  padding-right: 20px;
+}
+
+.white {
+  color: white;
+}
+
+.black {
+  color: black;
+}
+
+.block {
+  display: block;
+}
+
+.login {
+  float: right;
+/*  border: 1px solid black;
+  width: 100%;*/
+}
+
+.wrapper{
+  clear: right;
+}
+
 .row {
-  padding: 10px 0;
+  padding: 10px 0 10px 15px;
+  margin: 0 auto;
 }
 
 .cat-wrapper {
   display: inline-block;
   vertical-align: top;
   text-align: center;
-  overflow: hidden;
+  padding-right: 10px;
+/*  overflow: hidden;
   width: 200px;
-  height: 150px;
+  height: 150px;*/
 }
 
 .action-back {
-  background-image: url(http://assets.vg247.com/current//2014/06/street_fighter.jpg);
+  /*background-image: url(http://assets.vg247.com/current//2014/06/street_fighter.jpg);*/
   /*transform: scale(-2, -4);*/
 
+}
+
+.left {
+  /*width: 30%;*/
+  display: inline-block;
+  vertical-align: top;
+  padding-right: 30px;
+  /*float: left;*/
+}
+
+.right {
+  width: 50%;
+  display: inline-block;
+}
+
+.t_top {
+  display: inline-block;
+}
+
+.t-wrapper {
+  /*width: 100%;*/
+  padding-bottom: 40px;
+}
+
+.c-wrapper {
+  /*clear: left;*/
+  padding-bottom: 40px;
+}
+
+.resize {
+  height: 80px;
+  width: 80px;
+}
+
+.top-right {
+  /*padding-left: 30px;*/
+  /*text-align: right;*/
+  /*width: 70%;*/
+  float: right;
 }
 
 /*.cat-wrapper img {
