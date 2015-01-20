@@ -7,6 +7,7 @@ gem 'sinatra', '1.4.5'
 gem 'sinatra-contrib'
 gem 'rest-client'
 gem 'redcarpet'
+gem 'redis'
 
 group :development do
   gem 'pry'
